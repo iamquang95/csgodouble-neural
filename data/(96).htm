@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Rolls - CSGODouble</title>
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/old-buttons.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/dataTables.bootstrap.min.css" rel="stylesheet">
+
+<link href="css/mine.css?v=5" rel="stylesheet">
+<!-- <link href="css/dark.css" rel="stylesheet"> -->
+
+<link rel="shortcut icon" href="favicon.ico">
+
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootbox.min.js"></script>
+<script src="js/jquery.dataTables.min.js"></script>
+<script src="js/dataTables.bootstrap.js"></script>
+<script src="js/tinysort.js"></script>
+<script src="js/expanding.js"></script>
+<style>
+
+</style>
+<script>
+	var SETTINGS = ["confirm","sounds","dongers","hideme"];
+	function inlineAlert(x,y){
+		$("#inlineAlert").removeClass("alert-success alert-danger alert-warning hidden");
+		if(x=="success"){
+			$("#inlineAlert").addClass("alert-success").html("<i class='fa fa-check'></i><b> "+y+"</b>");
+		}else if(x=="error"){
+			$("#inlineAlert").addClass("alert-danger").html("<i class='fa fa-exclamation-triangle'></i> "+y);
+		}else if(x=="cross"){
+			$("#inlineAlert").addClass("alert-danger").html("<i class='fa fa-times'></i> "+y);
+		}else{
+			$("#inlineAlert").addClass("alert-warning").html("<b>"+y+" <i class='fa fa-spinner fa-spin'></i></b>");
+		}
+	}
+	function resizeFooter(){
+		var f = $('.footer').outerHeight(true);
+		var w = $(window).outerHeight(true);
+		$('body').css('margin-bottom',f);
+	}
+	$(window).resize(function(){
+		resizeFooter();
+	});
+	if (!String.prototype.format) {
+	  String.prototype.format = function() {
+	    var args = arguments;
+	    return this.replace(/{(\d+)}/g, function(match, number) { 
+	      return typeof args[number] != 'undefined'
+	        ? args[number]
+	        : match
+	      ;
+	    });
+	  };
+	}
+	function setCookie(key,value){
+		var exp = new Date();
+		exp.setTime(exp.getTime()+(365*24*60*60*1000));
+		document.cookie = key+"="+value+"; expires="+exp.toUTCString();
+	}
+	function getCookie(key){
+		var patt = new RegExp(key+"=([^;]*)");
+		var matches = patt.exec(document.cookie);
+		if(matches){
+			return matches[1];
+		}
+		return "";
+	}
+	function formatNum(x){
+		if(Math.abs(x)>=10000){
+			return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
+		return x;
+	}
+	$(document).ready(function(){
+		resizeFooter();
+		for(var i=0;i<SETTINGS.length;i++){
+			var v = getCookie("settings_"+SETTINGS[i]);
+			if(v=="true"){
+				$("#settings_"+SETTINGS[i]).prop("checked",true);	
+			}else if(v=="false"){
+				$("#settings_"+SETTINGS[i]).prop("checked",false);	
+			}			
+		}
+	});
+</script>
+		<style>
+			
+		</style>
+		<script type="text/javascript">
+
+			
+		</script>	
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-static-top" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<!-- <a class="navbar-brand" style="padding-top:0px;padding-bottom:0px;padding-right:0px" href="./"><img alt="CSGODouble" height="34" style="margin-top:8px;margin-bottom:8px;margin-right:5px" src="img/just.png"></a> -->
+            <a class="navbar-brand" href="./">CSGODouble.com</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li class="" style="margin-left:5px"><a href="./">Home</a></li>
+				<li class=""><a href="deposit.php">Deposit</a></li>
+				<li class=""><a href="withdraw.php">Withdraw</a></li>
+				<li class=""><a href="rolls.php">Provably Fair</a></li>
+				<li class=""><a href="affiliates.php">Affiliates</a></li>
+				<li><a href="#" data-toggle="modal" data-target="#promoModal">Free Coins</a></li>
+				<li class=""><a href="support.php">Support</a></li>
+
+					<li class=""><a target="_blank" href="https://www.facebook.com/csgodoubledotcom"><i class="fa fa-facebook"></i></a></li>
+					<li class=""><a target="_blank" href="https://twitter.com/csgodouble"><i class="fa fa-twitter"></i></a></li>
+					<li class=""><a target="_blank" href="http://steamcommunity.com/groups/csgodoubledotcom"><i class="fa fa-steam"></i></a></li>
+
+			</ul>		
+			<ul class="nav navbar-nav navbar-right">
+						<!-- <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li> -->
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="padding-top:0px;padding-bottom:0px;line-height:50px"> <img class="rounded" src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/1f/1fe64b0db691c59e64c919b644ade15714fdb0f1.jpg"> <b> Carota   CSGODiceGame.com</b> <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<!-- <li><a href="#" data-toggle="modal" data-target="#pointsModal"><i class="fa fa-user fa-fw"></i> Profile</a></li> -->
+						<li><a href="#" data-toggle="modal" data-target="#promoModal"><i class="fa fa-ticket fa-fw"></i> Redeem Code</a></li>
+						<li><a href="bets.php"><i class="fa fa-line-chart fa-fw"></i> Bet History</a></li>
+						<li><a href="offers.php"><i class="fa fa-history fa-fw"></i> Trade History</a></li>
+						<li><a href="transfers.php"><i class="fa fa-exchange fa-fw"></i> Transfer History</a></li>
+						
+						<!-- <li><a href="#" data-toggle="modal" data-target="#sendModal"><i class="fa fa-exchange fa-fw"></i> Send Credits</a></li> -->
+						<li><a href="#" data-toggle="modal" data-target="#settingsModal"><i class="fa fa-cog fa-fw"></i> Settings</a></li>
+						
+						
+						
+                        <li class="divider"></li>
+						<li><a href="?logout"><i class="fa fa-power-off fa-fw"></i> Logout</a></li>
+					</ul>
+				</li>
+						</ul>
+		</div>
+	</div>
+</nav>
+<div class="modal fade" id="settingsModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title"><b>Change Your Settings</b></h4>
+			</div>
+			<div class="modal-body">
+				<form>	  			        	
+								  
+				  	<div class="checkbox">
+				    	<label>
+				      		<input type="checkbox" id="settings_confirm" checked>
+				      		<strong>Confirm all bets over 10,000 coins</strong>
+				    	</label>
+				  	</div>
+				  	<div class="checkbox">
+				    	<label>
+				      		<input type="checkbox" id="settings_sounds" checked>
+				      		<strong>Enable sounds</strong>
+				    	</label>
+				  	</div>
+				  	<div class="checkbox">
+				    	<label>
+				      		<input type="checkbox" id="settings_dongers">
+				      		<strong>Display in $ amounts</strong>
+				    	</label>
+				  	</div>
+				  	<div class="checkbox">
+				    	<label>
+				      		<input type="checkbox" id="settings_hideme">
+				      		<strong>Hide my profile link in chat</strong>
+				    	</label>
+				  	</div>
+				  	
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-success" onclick="saveSettings()">Save Changes</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="promoModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title"><b>Redeem Promo Code</b></h4>
+			</div>
+			<div class="modal-body">
+				<b style='color:red'>Due to excessive spamming only white-listed codes are available.</b>
+				<br><br>				  
+				<div class="form-group">
+					<label for="exampleInputEmail1">Promo Code</label>
+					<input type='text' class='form-control' id='promocode' value=''>					
+				</div>				  	
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-success" onclick="redeem()">Redeem</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="chatRules">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title"><b>Chat Rules</b></h4>
+			</div>
+			<div class="modal-body" style="font-size:24px">				  
+				<ol>
+					<li>No Spamming</li>
+					<li>No Begging for Coins</li>
+					<li>No Posting Promo Codes</li>
+					<li>No Promo Codes in Profile Name</li>
+					<li>No Advertising "Prediction Groups"</li>
+					<li style='color:red'>One "Prediction" Per Roll</li>
+					<li style='color:red'>No Buying/Selling Coins</li>
+				</ol>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-block" data-dismiss="modal">Got it</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+function saveSettings(){
+	for(var i=0;i<SETTINGS.length;i++){
+		setCookie("settings_"+SETTINGS[i],$("#settings_"+SETTINGS[i]).is(":checked"));
+	}
+	$("#settingsModal").modal("hide");
+	if($("#settings_dongers").is(":checked")){
+		$("#balance").html("please reload");
+	}else{
+		$("#balance").html("please reload");
+	}
+}
+function redeem(){
+	var code = $("#promocode").val();
+	$.ajax({
+		url:"/scripts/_redeem.php?code="+code,
+		success:function(data){		
+			try{
+				data = JSON.parse(data);
+				if(data.success){
+					bootbox.alert("Success! You've received "+data.credits+" credits.");					
+				}else{
+					bootbox.alert(data.error);
+				}
+			}catch(err){
+				bootbox.alert("Javascript error: "+err);
+			}
+		},
+		error:function(err){
+			bootbox.alert("AJAX error: "+err);
+		}
+	});
+}
+</script>		<div class="container">
+
+						<table class='table table-bordered'>
+					<thead><tr>
+					<th>Time</th>
+					<th>Round</th>
+					<th>0</th>
+					<th>1</th>
+					<th>2</th>
+					<th>3</th>
+					<th>4</th>
+					<th>5</th>
+					<th>6</th>
+					<th>7</th>
+					<th>8</th>
+					<th>9</th>
+					</tr></thead><tbody><tr><td>12:00 AM</td><td>16234_</td><td></td><td></td><td></td><td></td><td></td><td></td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>12</td></tr><tr><td>12:05 AM</td><td>16235_</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>11</td></tr><tr><td>12:16 AM</td><td>16236_</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>6</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>3</td></tr><tr><td>12:28 AM</td><td>16237_</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>7</td></tr><tr><td>12:40 AM</td><td>16238_</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>12</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>10</td></tr><tr><td>12:52 AM</td><td>16239_</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>5</td></tr><tr><td>01:04 AM</td><td>16240_</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td></tr><tr><td>01:16 AM</td><td>16241_</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>1</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td></tr><tr><td>01:28 AM</td><td>16242_</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>1</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>5</td></tr><tr><td>01:39 AM</td><td>16243_</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>7</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>13</td></tr><tr><td>01:51 AM</td><td>16244_</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>3</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>3</td></tr><tr><td>02:03 AM</td><td>16245_</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>11</td></tr><tr><td>02:15 AM</td><td>16246_</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>4</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>3</td></tr><tr><td>02:27 AM</td><td>16247_</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>9</td></tr><tr><td>02:39 AM</td><td>16248_</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>7</td></tr><tr><td>02:51 AM</td><td>16249_</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>8</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>7</td></tr><tr><td>03:03 AM</td><td>16250_</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>1</td></tr><tr><td>03:15 AM</td><td>16251_</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>10</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>13</td></tr><tr><td>03:27 AM</td><td>16252_</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>3</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>12</td></tr><tr><td>03:39 AM</td><td>16253_</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>1</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>4</td></tr><tr><td>03:51 AM</td><td>16254_</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>11</td><td class='td-val ball-0'>0</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>5</td><td class='td-val ball-0'>0</td></tr><tr><td>04:03 AM</td><td>16255_</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>14</td></tr><tr><td>04:15 AM</td><td>16256_</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>3</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>3</td></tr><tr><td>04:27 AM</td><td>16257_</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>11</td></tr><tr><td>04:39 AM</td><td>16258_</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>7</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td></tr><tr><td>04:51 AM</td><td>16259_</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>10</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>4</td></tr><tr><td>05:03 AM</td><td>16260_</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>6</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>6</td></tr><tr><td>05:15 AM</td><td>16261_</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>10</td></tr><tr><td>05:27 AM</td><td>16262_</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>7</td></tr><tr><td>05:39 AM</td><td>16263_</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>13</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>13</td></tr><tr><td>05:51 AM</td><td>16264_</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>7</td></tr><tr><td>06:03 AM</td><td>16265_</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>4</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>12</td></tr><tr><td>06:15 AM</td><td>16266_</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>9</td></tr><tr><td>06:27 AM</td><td>16267_</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>12</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>8</td></tr><tr><td>06:39 AM</td><td>16268_</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>1</td></tr><tr><td>06:51 AM</td><td>16269_</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>14</td></tr><tr><td>07:03 AM</td><td>16270_</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>11</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>1</td></tr><tr><td>07:16 AM</td><td>16271_</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>5</td></tr><tr><td>07:28 AM</td><td>16272_</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>5</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>13</td></tr><tr><td>07:40 AM</td><td>16273_</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>12</td></tr><tr><td>07:52 AM</td><td>16274_</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>8</td></tr><tr><td>08:04 AM</td><td>16275_</td><td class='td-val ball-8'>9</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>6</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>1</td></tr><tr><td>08:16 AM</td><td>16276_</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>4</td></tr><tr><td>08:28 AM</td><td>16277_</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>4</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>4</td></tr><tr><td>08:40 AM</td><td>16278_</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>2</td></tr><tr><td>08:52 AM</td><td>16279_</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>7</td></tr><tr><td>09:04 AM</td><td>16280_</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>11</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>9</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>6</td></tr><tr><td>09:16 AM</td><td>16281_</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td></tr><tr><td>09:29 AM</td><td>16282_</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>4</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>12</td></tr><tr><td>09:41 AM</td><td>16283_</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>13</td></tr><tr><td>09:53 AM</td><td>16284_</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>12</td></tr><tr><td>10:06 AM</td><td>16285_</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>12</td></tr><tr><td>10:18 AM</td><td>16286_</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>10</td></tr><tr><td>10:31 AM</td><td>16287_</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>10</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>10</td></tr><tr><td>10:43 AM</td><td>16288_</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>6</td></tr><tr><td>10:56 AM</td><td>16289_</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>7</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>6</td></tr><tr><td>11:08 AM</td><td>16290_</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>1</td></tr><tr><td>11:21 AM</td><td>16291_</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>10</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>14</td></tr><tr><td>11:33 AM</td><td>16292_</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>8</td></tr><tr><td>11:45 AM</td><td>16293_</td><td class='td-val ball-1'>5</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>12</td></tr><tr><td>11:58 AM</td><td>16294_</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>9</td></tr><tr><td>12:10 PM</td><td>16295_</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>9</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>5</td><td class='td-val ball-0'>0</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>11</td></tr><tr><td>12:23 PM</td><td>16296_</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>5</td></tr><tr><td>12:35 PM</td><td>16297_</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>12</td></tr><tr><td>12:49 PM</td><td>16298_</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>9</td></tr><tr><td>01:01 PM</td><td>16299_</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>5</td></tr><tr><td>01:14 PM</td><td>16300_</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>4</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>1</td></tr><tr><td>01:26 PM</td><td>16301_</td><td class='td-val ball-1'>3</td><td class='td-val ball-0'>0</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>14</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>6</td></tr><tr><td>01:39 PM</td><td>16302_</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>2</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>3</td></tr><tr><td>01:52 PM</td><td>16303_</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>5</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>13</td></tr><tr><td>02:05 PM</td><td>16304_</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>12</td></tr><tr><td>02:17 PM</td><td>16305_</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>6</td></tr><tr><td>02:30 PM</td><td>16306_</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>14</td></tr><tr><td>02:42 PM</td><td>16307_</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>7</td></tr><tr><td>02:55 PM</td><td>16308_</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>6</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>2</td></tr><tr><td>03:08 PM</td><td>16309_</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>9</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>13</td><td class='td-val ball-0'>0</td></tr><tr><td>03:20 PM</td><td>16310_</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>6</td></tr><tr><td>03:33 PM</td><td>16311_</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>2</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>2</td></tr><tr><td>03:45 PM</td><td>16312_</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>14</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>12</td></tr><tr><td>03:58 PM</td><td>16313_</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>5</td></tr><tr><td>04:11 PM</td><td>16314_</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>5</td></tr><tr><td>04:23 PM</td><td>16315_</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>2</td></tr><tr><td>04:36 PM</td><td>16316_</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>2</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>2</td></tr><tr><td>04:49 PM</td><td>16317_</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>11</td></tr><tr><td>05:01 PM</td><td>16318_</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>9</td></tr><tr><td>05:14 PM</td><td>16319_</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>4</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>3</td></tr><tr><td>05:26 PM</td><td>16320_</td><td class='td-val ball-1'>6</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>6</td></tr><tr><td>05:39 PM</td><td>16321_</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>9</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>10</td></tr><tr><td>05:51 PM</td><td>16322_</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>7</td></tr><tr><td>06:04 PM</td><td>16323_</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>9</td></tr><tr><td>06:16 PM</td><td>16324_</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>8</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>11</td></tr><tr><td>06:28 PM</td><td>16325_</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>4</td><td class='td-val ball-0'>0</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>1</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>11</td><td class='td-val ball-0'>0</td></tr><tr><td>06:41 PM</td><td>16326_</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>2</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>12</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>12</td></tr><tr><td>06:53 PM</td><td>16327_</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>12</td></tr><tr><td>07:05 PM</td><td>16328_</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>14</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>13</td></tr><tr><td>07:17 PM</td><td>16329_</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>5</td></tr><tr><td>07:29 PM</td><td>16330_</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>10</td></tr><tr><td>07:41 PM</td><td>16331_</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>14</td><td class='td-val ball-0'>0</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>2</td></tr><tr><td>07:54 PM</td><td>16332_</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>4</td></tr><tr><td>08:06 PM</td><td>16333_</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>10</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>11</td></tr><tr><td>08:18 PM</td><td>16334_</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>14</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>1</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>3</td></tr><tr><td>08:30 PM</td><td>16335_</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>2</td></tr><tr><td>08:42 PM</td><td>16336_</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>9</td></tr><tr><td>08:54 PM</td><td>16337_</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>5</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>6</td></tr><tr><td>09:06 PM</td><td>16338_</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>7</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>2</td></tr><tr><td>09:18 PM</td><td>16339_</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>9</td></tr><tr><td>09:29 PM</td><td>16340_</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>14</td></tr><tr><td>09:41 PM</td><td>16341_</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>5</td><td class='td-val ball-1'>2</td></tr><tr><td>09:53 PM</td><td>16342_</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>3</td></tr><tr><td>10:05 PM</td><td>16343_</td><td class='td-val ball-1'>4</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>7</td></tr><tr><td>10:17 PM</td><td>16344_</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>11</td><td class='td-val ball-0'>0</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>7</td></tr><tr><td>10:29 PM</td><td>16345_</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>9</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>8</td></tr><tr><td>10:41 PM</td><td>16346_</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>13</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>1</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>9</td></tr><tr><td>10:53 PM</td><td>16347_</td><td class='td-val ball-0'>0</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>9</td></tr><tr><td>11:04 PM</td><td>16348_</td><td class='td-val ball-8'>8</td><td class='td-val ball-0'>0</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>2</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>9</td><td class='td-val ball-8'>13</td><td class='td-val ball-8'>13</td><td class='td-val ball-0'>0</td></tr><tr><td>11:16 PM</td><td>16349_</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>8</td><td class='td-val ball-8'>10</td><td class='td-val ball-1'>3</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>10</td><td class='td-val ball-8'>11</td></tr><tr><td>11:28 PM</td><td>16350_</td><td class='td-val ball-1'>6</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>14</td><td class='td-val ball-8'>12</td><td class='td-val ball-8'>12</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>13</td></tr><tr><td>11:40 PM</td><td>16351_</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>1</td><td class='td-val ball-8'>11</td><td class='td-val ball-1'>5</td><td class='td-val ball-8'>11</td><td class='td-val ball-8'>14</td><td class='td-val ball-1'>4</td><td class='td-val ball-1'>6</td><td class='td-val ball-1'>7</td><td class='td-val ball-8'>9</td></tr><tr><td>11:52 PM</td><td>16352_</td><td class='td-val ball-1'>2</td><td class='td-val ball-8'>8</td><td class='td-val ball-1'>3</td><td class='td-val ball-1'>4</td><td class='td-val ball-8'>11</td><td class='td-val ball-0'>0</td><td class='td-val ball-8'>12</td><td></td><td></td><td></td></tr></tbody></table>		</div>	
+		<footer class="well footer">
+	<div class="">
+		<div class="pull-left" style="overflow:hidden">
+			<a href="https://www.facebook.com/csgodoubledotcom" target="_blank"><img class="rounded" src="img/social/facebook_icon.png"></a>
+			<a href="https://twitter.com/csgodouble" target="_blank"><img class="rounded" src="img/social/twitter_icon.png"></a>
+			<!-- <a href="#" target="_blank"><img class="rounded" src="img/social/youtube icon.png"></a> -->
+			<!-- <a href="#" target="_blank"><img class="rounded" src="img/social/reddit icon.png"></a> -->
+			<!-- <a href="#" target="_blank"><img class="rounded" src="img/social/twitch icon.png"></a> -->
+			<a href="http://steamcommunity.com/groups/csgodoubledotcom" target="_blank"><img class="rounded" src="img/social/steam_icon.png"></a>
+		</div>
+		<div class="pull-right" style="overflow:hidden;">
+			<!-- Prices provided by <a href="http://csgo.steamanalyst.com/" target="_blank">SteamAnalyst</a> -->
+			<a href="http://csgo.steamanalyst.com/" target="_blank"><img class="" src="img/social/sa.gif"></a>
+		</div>
+		<ul class="list-inline" style="display:inline-block;margin-top:10px">
+			<li>Copyright &copy; 2016, CSGODouble.com - All rights reserved.</li>
+			<li><a href="tos.php">Terms of Service</a></li>
+			<li><a href="faq.php">FAQ</a></li>
+			<li><a href="contact.php">Contact Us</a></li>
+			<li><a href="http://steampowered.com" target="_target">Powered by Steam</a></li>
+		</ul>
+	</div>	
+</footer>			
+	</body>
+</html>
